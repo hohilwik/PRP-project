@@ -1,0 +1,478 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Include other packages here, before hyperref.
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[breaklinks=true,bookmarks=false]{hyperref}
+
+\cvprfinalcopy % *** Uncomment this line for the final submission
+
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+%\ifcvprfinal\pagestyle{empty}\fi
+\setcounter{page}{1}
+\begin{document}
+
+%%%%%%%%% TITLE
+\title{Random variables in Communication network}
+
+\author{Pranav Manu\\
+ECD\\
+2020112019\\
+{\tt\small pranav.m@research.iiit.ac.in}
+% For a paper whose authors are all at the same institution,
+% omit the following lines up until the closing ``}''.
+% Additional authors and addresses can be added with ``\and'',
+% just like the second author.
+% To save space, use either the email address or home page, not both
+% \and
+% Second Author\\
+% Institution2\\
+% First line of institution2 address\\
+% {\tt\small secondauthor@i2.org}
+}
+
+\maketitle
+%\thispagestyle{empty}
+
+%%%%%%%%% ABSTRACT
+% \begin{abstract}
+%   The ABSTRACT is to be in fully-justified italicized text, at the top
+%   of the left-hand column, below the author and affiliation
+%   information. Use the word ``Abstract'' as the title, in 12-point
+%   Times, boldface type, centered relative to the column, initially
+%   capitalized. The abstract is to be in 10-point, single-spaced type.
+%   Leave two blank lines after the Abstract, then begin the main text.
+%   Look at previous CVPR abstracts to get a feel for style and length.
+% \end{abstract}
+
+%%%%%%%%% BODY TEXT
+\section{Dependent Random variables in Communication}
+
+We use Random vectors with independent components can be used to represent information in Communication network. However, in real world, it is not so as each component may be correlated to the other in some way and if we know this correlation we can perform better compression.To understand the correlation, we must know the models of dependence. Another application of dependent random variable is when a sequence of bits is transmitted through a noisy channel, then the sequence received at receiver, in the form of a random vector, depends on the transmitted random vector. If they were independent, then we could never be able to decode the received back to the original message with low probability.
+%-------------------------------------------------------------------------
+\subsection{Forward and inverse probability}
+Probability calculations fall into two categories: \textit{forward probability} and \textit{inverse probability}.
+\textbf{Forward probability} involves some generative model that describes a process that results in some data, the task then becomes to compute the probability distribution or expectation of some quantity that depends on the data. Entropy calculation falls into this category.\\
+\textbf{Inverse probability} problems also involve some generative model of a process (In this discussion, this process is communication), but here instead of calculating the probability distribution of some quantity as a result of the process, we calculate the probability of one or more unobserved variables in the process, given the observed variables. This concept will be used ahead in the modelling of a decoder to estimate the transmitted sequence, given a received sequence in communication. This involves the use of Baye's Theorem, and can be used in predictions. It can also be used in data compression.
+\subsubsection{Inferences in Probability}
+Inference in communication involves deciphering the message transmitted through a noisy channel upon receiving it at the receivers end. Inferences can be correctly made in communication networks using the Bayes' theorem.
+
+\subsection{Types of Entropy}
+
+The following Entropy will be used ahead. Entropy can be said as the expected information content carried by a Random variable.\\
+\textbf{Entropy}:
+\begin{eqnarray*}
+H(X)&=&\sum_{x\in Supp(P_{X})}{P_{X}(x).log\frac{1}{P_{X}(x)}}
+\end{eqnarray*}
+\textbf{Joint Entropy}:
+\begin{eqnarray*}
+H(X,Y)&=&\sum_{x,y\in Supp(P_{X,Y})}{P_{X,Y}(x,y).log\frac{1}{P_{X,Y}(x,y)}}
+\end{eqnarray*}
+Here the entropy represents the expected information carried by X and Y simultaneously.\\
+\textbf{Conditional Entropy}:
+\begin{eqnarray*}
+H(X|Y)&=&\sum_{y\in Supp(P_{Y})}{P_{Y}(y).H(X|Y=y)}\\
+H(X|Y=y)&=&\sum_{x\in Supp(P_{X|Y})}{P_{X|Y}(x|y).H(x|y)}
+\end{eqnarray*}
+This represents the expected information carried by X, given that we know the information in Y.
+It can also be described as the uncertainty that remains in X after we know Y, as information is the increases as uncertainty increases. We can see that the conditional entropy depends on the conditional probability of X given Y.
+For independent X and Y:
+\begin{eqnarray*}
+H(X|Y)=H(X)
+\end{eqnarray*}
+This can be explained by the fact that since they are independent, knowing Y we still cannot say anything about X.\\
+\textbf{Information Content and chain rule}:
+Information content of X is represented as:
+\begin{eqnarray*}
+    \frac{1}{p_X(X=x_i)}
+\end{eqnarray*}
+And chain rules of probability states that for two random variables:
+\begin{eqnarray*}
+    p(x,y)=p(x).p(y|x)
+\end{eqnarray*}
+Using this in the expression for entropy, we can derive the chain rule for Entropy:
+\begin{eqnarray*}
+    H(X,Y)=H(X)+H(Y|X)=H(Y)+H(X|Y)
+\end{eqnarray*}
+\textbf{Mutual induction}:
+\begin{eqnarray*}
+I(X;Y)\equiv H(X)-H(X|Y)=H(Y)-H(Y|X) 
+\end{eqnarray*}
+This is used to represent the reduction in information content after we have received Y, or vice versa. This concept is used to define the \textbf{channel capacity} or the maximum amount of information that can be sent through a channel. This can also express the average information content expressed by one about the other. 
+
+\subsection{Gibbs Inequality}
+Also known as relative entropy or Kullback-Leibler divergence between two probability distribution $P(x)$ and $Q(x)$ defined over the same alphabet $A_X$, it is a very important concept in information theory. It can loosely be used to define the "distance" between two probability distributions. However it is not strictly distance. It is not symmetric, that is, relative entropy between P and Q is not the same as the relative entropy between Q and P.
+\begin{eqnarray*}
+    D(P||Q)=\sum_{x}P(x).log\frac{P(x)}{Q(x)}
+\end{eqnarray*}
+
+% \subsection{Dual submission}
+
+% Please refer to the author guidelines on the CVPR 2018 web page for a
+% discussion of the policy on dual submissions.
+
+% \subsection{Paper length}
+% Papers, excluding the references section,
+% must be no longer than eight pages in length. The references section
+% will not be included in the page count, and there is no limit on the
+% length of the references section. For example, a paper of eight pages
+% with two pages of references would have a total length of 10 pages.
+% {\bf There will be no extra page charges for
+%   CVPR 2018.}
+
+% Overlength papers will simply not be reviewed.  This includes papers
+% where the margins and formatting are deemed to have been significantly
+% altered from those laid down by this style guide.  Note that this
+% \LaTeX\ guide already sets figure captions and references in a smaller font.
+% The reason such papers will not be reviewed is that there is no provision for
+% supervised revisions of manuscripts.  The reviewing process cannot determine
+% the suitability of the paper for presentation in eight pages if it is
+% reviewed in eleven.  
+
+% %-------------------------------------------------------------------------
+% \subsection{The ruler}
+% The \LaTeX\ style defines a printed ruler which should be present in the
+% version submitted for review.  The ruler is provided in order that
+% reviewers may comment on particular lines in the paper without
+% circumlocution.  If you are preparing a document using a non-\LaTeX\
+% document preparation system, please arrange for an equivalent ruler to
+% appear on the final output pages.  The presence or absence of the ruler
+% should not change the appearance of any other content on the page.  The
+% camera ready copy should not contain a ruler. (\LaTeX\ users may uncomment
+% the \verb'\cvprfinalcopy' command in the document preamble.)  Reviewers:
+% note that the ruler measurements do not align well with lines in the paper
+% --- this turns out to be very difficult to do well when the paper contains
+% many figures and equations, and, when done, looks ugly.  Just use fractional
+% references (e.g.\ this line is $095.5$), although in most cases one would
+% expect that the approximate location will be adequate.
+
+% \subsection{Mathematics}
+
+% Please number all of your sections and displayed equations.  It is
+% important for readers to be able to refer to any particular equation.  Just
+% because you didn't refer to it in the text doesn't mean some future reader
+% might not need to refer to it.  It is cumbersome to have to use
+% circumlocutions like ``the equation second from the top of page 3 column
+% 1''.  (Note that the ruler will not be present in the final copy, so is not
+% an alternative to equation numbers).  All authors will benefit from reading
+% Mermin's description of how to write mathematics:
+% \url{http://www.pamitc.org/documents/mermin.pdf}.
+
+
+% \subsection{Blind review}
+
+% Many authors misunderstand the concept of anonymizing for blind
+% review.  Blind review does not mean that one must remove
+% citations to one's own work---in fact it is often impossible to
+% review a paper unless the previous citations are known and
+% available.
+
+% Blind review means that you do not use the words ``my'' or ``our''
+% when citing previous work.  That is all.  (But see below for
+% techreports.)
+
+% Saying ``this builds on the work of Lucy Smith [1]'' does not say
+% that you are Lucy Smith; it says that you are building on her
+% work.  If you are Smith and Jones, do not say ``as we show in
+% [7]'', say ``as Smith and Jones show in [7]'' and at the end of the
+% paper, include reference 7 as you would any other cited work.
+
+% An example of a bad paper just asking to be rejected:
+% \begin{quote}
+% \begin{center}
+%     An analysis of the frobnicatable foo filter.
+% \end{center}
+
+%   In this paper we present a performance analysis of our
+%   previous paper [1], and show it to be inferior to all
+%   previously known methods.  Why the previous paper was
+%   accepted without this analysis is beyond me.
+
+%   [1] Removed for blind review
+% \end{quote}
+
+
+% An example of an acceptable paper:
+
+% \begin{quote}
+% \begin{center}
+%      An analysis of the frobnicatable foo filter.
+% \end{center}
+
+%   In this paper we present a performance analysis of the
+%   paper of Smith \etal [1], and show it to be inferior to
+%   all previously known methods.  Why the previous paper
+%   was accepted without this analysis is beyond me.
+
+%   [1] Smith, L and Jones, C. ``The frobnicatable foo
+%   filter, a fundamental contribution to human knowledge''.
+%   Nature 381(12), 1-213.
+% \end{quote}
+
+% If you are making a submission to another conference at the same time,
+% which covers similar or overlapping material, you may need to refer to that
+% submission in order to explain the differences, just as you would if you
+% had previously published related work.  In such cases, include the
+% anonymized parallel submission~\cite{Authors14} as additional material and
+% cite it as
+% \begin{quote}
+% [1] Authors. ``The frobnicatable foo filter'', F\&G 2014 Submission ID 324,
+% Supplied as additional material {\tt fg324.pdf}.
+% \end{quote}
+
+% Finally, you may feel you need to tell the reader that more details can be
+% found elsewhere, and refer them to a technical report.  For conference
+% submissions, the paper must stand on its own, and not {\em require} the
+% reviewer to go to a techreport for further details.  Thus, you may say in
+% the body of the paper ``further details may be found
+% in~\cite{Authors14b}''.  Then submit the techreport as additional material.
+% Again, you may not assume the reviewers will read this material. 
+
+% Sometimes your paper is about a problem which you tested using a tool which
+% is widely known to be restricted to a single institution.  For example,
+% let's say it's 1969, you have solved a key problem on the Apollo lander,
+% and you believe that the CVPR70 audience would like to hear about your
+% solution.  The work is a development of your celebrated 1968 paper entitled
+% ``Zero-g frobnication: How being the only people in the world with access to
+% the Apollo lander source code makes us a wow at parties'', by Zeus \etal.
+
+% You can handle this paper like any other.  Don't write ``We show how to
+% improve our previous work [Anonymous, 1968].  This time we tested the
+% algorithm on a lunar lander [name of lander removed for blind review]''.
+% That would be silly, and would immediately identify the authors. Instead
+% write the following:
+% \begin{quotation}
+% \noindent
+%   We describe a system for zero-g frobnication.  This
+%   system is new because it handles the following cases:
+%   A, B.  Previous systems [Zeus et al. 1968] didn't
+%   handle case B properly.  Ours handles it by including
+%   a foo term in the bar integral.
+
+%   ...
+
+%   The proposed system was integrated with the Apollo
+%   lunar lander, and went all the way to the moon, don't
+%   you know.  It displayed the following behaviours
+%   which show how well we solved cases A and B: ...
+% \end{quotation}
+% As you can see, the above text follows standard scientific convention,
+% reads better than the first version, and does not explicitly name you as
+% the authors.  A reviewer might think it likely that the new paper was
+% written by Zeus \etal, but cannot make any decision based on that guess.
+% He or she would have to be sure that no other authors could have been
+% contracted to solve problem B.
+
+% FAQ: Are acknowledgements OK?  No.  Leave them for the final copy.
+
+
+% \begin{figure}[t]
+% \begin{center}
+% \fbox{\rule{0pt}{2in} \rule{0.9\linewidth}{0pt}}
+%   %\includegraphics[width=0.8\linewidth]{egfigure.eps}
+% \end{center}
+%   \caption{Example of caption.  It is set in Roman so that mathematics
+%   (always set in Roman: $B \sin A = A \sin B$) may be included without an
+%   ugly clash.}
+% \label{fig:long}
+% \label{fig:onecol}
+% \end{figure}
+
+% \subsection{Miscellaneous}
+
+% \noindent
+% Compare the following:\\
+% \begin{tabular}{ll}
+%  \verb'$conf_a$' &  $conf_a$ \\
+%  \verb'$\mathit{conf}_a$' & $\mathit{conf}_a$
+% \end{tabular}\\
+% See The \TeX book, p165.
+
+% The space after \eg, meaning ``for example'', should not be a
+% sentence-ending space. So \eg is correct, {\em e.g.} is not.  The provided
+% \verb'\eg' macro takes care of this.
+
+% When citing a multi-author paper, you may save space by using ``et alia'',
+% shortened to ``\etal'' (not ``{\em et.\ al.}'' as ``{\em et}'' is a complete word.)
+% However, use it only when there are three or more authors.  Thus, the
+% following is correct: ``
+%   Frobnication has been trendy lately.
+%   It was introduced by Alpher~\cite{Alpher02}, and subsequently developed by
+%   Alpher and Fotheringham-Smythe~\cite{Alpher03}, and Alpher \etal~\cite{Alpher04}.''
+
+% This is incorrect: ``... subsequently developed by Alpher \etal~\cite{Alpher03} ...''
+% because reference~\cite{Alpher03} has just two authors.  If you use the
+% \verb'\etal' macro provided, then you need not worry about double periods
+% when used at the end of a sentence as in Alpher \etal.
+
+% For this citation style, keep multiple citations in numerical (not
+% chronological) order, so prefer \cite{Alpher03,Alpher02,Authors14} to
+% \cite{Alpher02,Alpher03,Authors14}.
+
+
+% \begin{figure*}
+% \begin{center}
+% \fbox{\rule{0pt}{2in} \rule{.9\linewidth}{0pt}}
+% \end{center}
+%   \caption{Example of a short caption, which should be centered.}
+% \label{fig:short}
+% \end{figure*}
+
+%------------------------------------------------------------------------
+\section{Communication over a noisy Channel}
+Channels, or the medium through which information is transmitted, are usually noisy. The need arises develop methods for error-free communication.For this purpose, we will elaborate on noisy error channel and channel coding. Channel coding is used to make the noisy channel behave close to a noiseless channel. The Channel Code is made such that noisy signal received can be decoded. As we have stated before, the measure of the information  transmitted can be expressed by the mutual information between the transmitted and received signal.
+
+%-------------------------------------------------------------------------
+\subsection{Noisy Channels}
+
+Conditional probability between the transmitted signal and the received signal can be used to characterize the noisy channel.\\
+\textbf{Discrete Noiseless Channel(Q):}
+It is characterized by an input alphabet $A_X$ an output alphabet $A_Y$ (Alphabet is the set of values that the message can be mapped to) , and a set of conditional probability distributions $P(y |x)$, one for each $x\in A_X$ .
+\begin{eqnarray*}
+    Q_{j|i}=P(y=b_j|x=a_i)
+\end{eqnarray*}
+We can make this into a matrix such that each column is a probability vector, and then obtain the $P_Y$ probability vector by multiplying Q matrix with $P_X$ probability vector.
+% \begin{verbatim}
+% \thispagestyle{empty}
+% \end{verbatim}
+Some models of noisy channel are:
+\textbf{Binary Symmetric Channel:} $A_X$={0,1}. $A_Y$={0,1}
+\begin{eqnarray*}
+P(y=0|x=0)=1-p;\ P(y=1|x=0)=p\\
+P(y= 0|x= 1)=p;\ P(y= 1|x=1) = 1-p\\
+\end{eqnarray*}
+Here p is said to be the probability of the transmitted bit to be flipped.\\
+\textbf{Binary Erasure Channel:} $A_X$={0,1}. $A_Y={0,\epsilon,1}$
+\begin{eqnarray*}
+P(y=0|x=0)=1-p;\ P(y=1|x=0)=0\\
+P(y= \epsilon|x= 1)=p;\ P(y= \epsilon|x=1)= p\\
+P(y=1|x=0)=0;\ P(y=1|x=1)=1-p
+\end{eqnarray*}
+Here p is said to be the probability of the transmitted bit getting erased. $\epsilon$ represent the erasure of the bit. The bit is not flipped here, but erased with some probability.
+The probability of getting erased or flipped in the above noisy channels is conditionally dependent on the transmitted bit.
+
+%-------------------------------------------------------------------------
+\subsection{Estimating the input given the output}
+To estimate the transmitted symbol x from the received signal y, we can use the \textbf{Bayes' theorem} given y:
+\begin{eqnarray*}
+P(x|y)&=&\frac{P(y|x).P(x)}{P(y)}\\
+&=&\frac{P(y|x).P(x)}{\sum_{x_i\in X}P(y|x_i)P(x_i)}
+\end{eqnarray*}
+A decent estimate here is: $\underset{x}{argmax}(P(x|y))$
+
+\subsection{Information conveyed by a Channel}
+    To measure the amount of information the output conveys about particular input X, we use mutual Information:
+    \begin{eqnarray*}
+        I(X;Y)\equiv H(X)-H(Y|X)
+    \end{eqnarray*}
+    Note that:$I(X;Y)\leq min(H(Y),H(X))$. Intuitively it means that no more than the conveyed information can be received.
+    \textbf{Maximising mutual information}\\
+    Maximising mutual information conveyed by the channel would mean to maximise the amount of information transferred in communication. We define the channel capacity of a channel Q to be the maximum mutual information over $P_X$
+    \begin{eqnarray*}
+        C(Q)=\underset{P_X}{max}I(X;Y)
+    \end{eqnarray*}
+    We have control over $P_X$ and can maximising it by optimising the input coding. $P_X$ at channel capacity is called \textit{optimal input distribution}. The rate can be increased only up to the channel capacity if we want to have arbitrarily small probability of error. This is the converse of the \textbf{Shannon's Channel Coding theorem.}
+
+\subsection{Optimal Decoder for noisy channel coding}
+Since the transmitted sequence or codeword might have some error due to it being transmitted  though a noisy channel. As a result, the received codeword is not the same as the transmitted one. Therefore, a need arises to infer the transmitted message from the received codeword, to enable communication. This is done by the use of a decoder.
+For a channel, an optimal decoder is one which minimises the probability of error. It decodes an output y as the input x that has maximum posterior probability P(x|y)
+\begin{eqnarray*}
+    P(x|y)&=&\frac{P(y|x).P(x)}{\sum_{x_i\in X}P(y|x_i)P(x_i)}\\
+    \hat{x}_{optimal}&=&argmax P(x|y)
+\end{eqnarray*}
+If the prior distribution on x is uniform, then the optimal decoder is called \textit{maximum likelihood decoder} i.e., the estimation is such that the output is such that P(y|x) has the maximum likelihood.
+
+\subsection{Gaussian Random variable to model Noise}
+Noise can also be modelled using Gaussian random variable. Noise can be defined as the sum of infinitely many independent random variable, as there may be several disturbances in the channel. According to \textit{Central Limit theorem}, sum of infinitely many independent random variable results is a Gaussian random variable. The resultant sum can be said as the random variable representing the noise in the channel.
+%-------------------------------------------------------------------------
+% \subsection{Footnotes}
+
+% Please use footnotes\footnote {This is what a footnote looks like.  It
+% often distracts the reader from the main flow of the argument.} sparingly.
+% Indeed, try to avoid footnotes altogether and include necessary peripheral
+% observations in
+% the text (within parentheses, if you prefer, as in this sentence).  If you
+% wish to use a footnote, place it at the bottom of the column on the page on
+% which it is referenced. Use Times 8-point type, single-spaced.
+
+
+%-------------------------------------------------------------------------
+% \subsection{References}
+
+% List and number all bibliographical references in 9-point Times,
+% single-spaced, at the end of your paper. When referenced in the text,
+% enclose the citation number in square brackets, for
+% example~\cite{Authors14}.  Where appropriate, include the name(s) of
+% editors of referenced books.
+
+% \begin{table}
+% \begin{center}
+% \begin{tabular}{|l|c|}
+% \hline
+% Method & Frobnability \\
+% \hline\hline
+% Theirs & Frumpy \\
+% Yours & Frobbly \\
+% Ours & Makes one's heart Frob\\
+% \hline
+% \end{tabular}
+% \end{center}
+% \caption{Results.   Ours is better.}
+% \end{table}
+
+% %-------------------------------------------------------------------------
+% \subsection{Illustrations, graphs, and photographs}
+
+% All graphics should be centered.  Please ensure that any point you wish to
+% make is resolvable in a printed copy of the paper.  Resize fonts in figures
+% to match the font in the body text, and choose line widths which render
+% effectively in print.  Many readers (and reviewers), even of an electronic
+% copy, will choose to print your paper in order to read it.  You cannot
+% insist that they do otherwise, and therefore must not assume that they can
+% zoom in to see tiny details on a graphic.
+
+% When placing figures in \LaTeX, it's almost always best to use
+% \verb+\includegraphics+, and to specify the  figure width as a multiple of
+% the line width as in the example below
+% {\small\begin{verbatim}
+%   \usepackage[dvips]{graphicx} ...
+%   \includegraphics[width=0.8\linewidth]
+%                   {myfile.eps}
+% \end{verbatim}
+% }
+
+
+% %-------------------------------------------------------------------------
+% \subsection{Color}
+
+% Please refer to the author guidelines on the CVPR 2018 web page for a discussion
+% of the use of color in your document.
+
+% %------------------------------------------------------------------------
+% \section{Final copy}
+
+% You must include your signed IEEE copyright release form when you submit
+% your finished paper. We MUST have this form before your paper can be
+% published in the proceedings.
+
+
+% {\small
+% \bibliographystyle{ieee}
+% \bibliography{egbib}
+% }
+
+\end{document}
+\section{Final copy}
+
