@@ -88,30 +88,30 @@ X_1 , X_2 , \dots
 Markov chain if for n = 1, 2, \dots , \\
 \\
 \begin{mathbf}
-Pr(X_n+1 = x_n+1 |X_n = x_n , X_n−1 = x_n−1 , . . . , X_1 = x_1 )
-= Pr (X_n+1 = x_n+1 |X_n = x_n )
+Pr(X_{n+1} = x_{n+1} |X_n = x_n , X_{n-1} = x_{n-1} , . . . , X_1 = x_1 )
+= Pr (X_{n+1} = x_{n+1} |X_n = x_n )
 \end{mathbf}\\
 \\ \begin{math}
-\quad \forall \quad x_1 , x_2 , . . . , x_n , x_n+1 \in X .
+\quad \forall \quad x_1 , x_2 , . . . , x_n , x_{n+1} \in X .
 \end{math}\\ 
 \\
 In this case, the joint probability mass function of the random variables
 can be written as\\
 \\ \begin{math}
-p(x_1 , x_2 , \dots, x_n ) = p(x_1 )p(x_2 |x_1 )p(x_3 |x_2 ) · · · p(x_n |x_n−1 ).
+p(x_1 , x_2 , \dots, x_n ) = p(x_1 )p(x_2 |x_1 )p(x_3 |x_2 ) · · · p(x_n |x_{n-1} ).
 \end{math}\\
 \\ It is assumed that the Markov chains are time invariant unless otherwise
 stated. \\
 \\ \textbf{Definition} The Markov chain is said to be time invariant if the conditional probability \begin{math} p(x_n+1 |x_n )\end{math} does not depend on n; that is, for n = 1, 2, \dots , 
 \begin{eqnarray*}
-\\ Pr{X_n+1 = b|X_n = a} = Pr{X_2 = b|X_1 = a} 
+\\ Pr\{X_{n+1} = b|X_n = a\} = Pr\{X_2 = b|X_1 = a\} 
 \end{eqnarray*} \begin{math} \forall \quad  a, b\in X .\end{math} \\
 \\
 \textbf{State and Transition matrix:} \\ If \begin{math} {X_i} \end{math} is a Markov chain, \begin{math} X_n \end{math} is called the state at time n. A time-invariant Markov chain is characterized by its initial state and a probability transition matrix, given by
 \begin{math}
  P = [P_{ij} ], \quad for \quad i, j \in {1, 2, \dots , m}, 
 \end{math}
-\\ where \begin{math} P_ij = Pr\{X_n+1 = j |X_n = i\}. \end{math} \\
+\\ where \begin{math} P_ij = Pr\{X_{n+1} = j |X_n = i\}. \end{math} \\
 \\
 If it is possible to go with positive probability from any state of the
 Markov chain to any other state in a ﬁnite number of steps, the Markov
@@ -122,7 +122,7 @@ of different paths from a state to itself is 1, the Markov chain is said to
 \textbf{Example: }Consider a two-state Markov chain with a probability transition matrix given by: 
  \begin{eqnarray*}
 \begin{bmatrix}
-1- \aplha & \alpha \\
+{1 - \alpha} & \alpha \\
 \beta & 1 - \beta
 \end{bmatrix}
 \end{eqnarray*}
@@ -154,7 +154,7 @@ Since a stochastic process defined by a Markov chain that is irreducible, aperio
 \end{equation*} when the limit exists.\\
 \\We can also deﬁne a related quantity for entropy rate:
 \begin{equation*}
-    H'( X ) = \lim_{n \to \infty} H (X_n |X_n−1 , X_n−2 , . . . , X_1 )
+    H'( X ) = \lim_{n \to \infty} H (X_n |X_{n-1} , X_{n-2} , . . . , X_1 )
 \end{equation*} when the limit exists.\\
 \\\begin{math}
       H(X) 
@@ -164,10 +164,10 @@ Since a stochastic process defined by a Markov chain that is irreducible, aperio
 \\ \textbf{Entropy of a stationary Markov Chain:}\\
 For a stationary Markov chain, the entropy rate is given by
 \begin{equation*}
-    H ( X ) = H'( X ) = \lim H (X_n |X_n−1 , . . . , X_1 ) 
+    H ( X ) = H'( X ) = \lim H (X_n |X_{n-1} , . . . , X_1 ) 
 \end{equation*}
 \begin{equation}
-= \lim H (X_n |X_n−1 )
+= \lim H (X_n |X_{n-1} )
 = H (X_2 |X_1 )
 \end{equation}\\
 \textbf{Theorem: }Let \begin{math}
