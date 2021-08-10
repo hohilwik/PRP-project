@@ -1,0 +1,10 @@
+function b = strtoBin(s)
+
+for k=1:size(s,2)
+      
+    b=str2num(s(k))
+       
+end
+
+end
+
